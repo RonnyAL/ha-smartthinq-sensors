@@ -359,7 +359,7 @@ async def _options_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> N
     if domain_data.get(CONF_SCAN_INTERVAL) == new_interval:
         return
     domain_data[CONF_SCAN_INTERVAL] = new_interval
-    delta = timedelta(seconds=new_interval)
+    delta = timedelta(seconds=interval) if interval > 0 else None
     for devices in domain_data.get(LGE_DEVICES, {}).values():
         for lge_device in devices:
             if lge_device.coordinator is not None:
