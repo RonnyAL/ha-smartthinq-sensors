@@ -54,6 +54,7 @@ from .const import (
     DOMAIN,
     MAX_SCAN_INTERVAL,
     MIN_SCAN_INTERVAL,
+    DISABLE_SCAN_INTERVAL,
     __min_ha_version__,
 )
 from .wideq.core_exceptions import AuthenticationError, InvalidCredentialError
@@ -416,7 +417,11 @@ class SmartThinQOptionsFlowHandler(OptionsFlow):
     ) -> ConfigFlowResult:
         """Manage the integration options."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            interval = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+            if interval != DISABLE_SCAN_INTERVAL and interval < MIN_SCAN_INTERVAL:
+                errors[CONF_SCAN_INTERVAL] = "invalid_scan_interval"
+            else:
+                return self.async_create_entry(title="", data=user_input)
 
         current = self.config_entry.options.get(
             CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
@@ -425,7 +430,7 @@ class SmartThinQOptionsFlowHandler(OptionsFlow):
             {
                 vol.Required(CONF_SCAN_INTERVAL, default=current): NumberSelector(
                     NumberSelectorConfig(
-                        min=MIN_SCAN_INTERVAL,
+                        min=0,
                         max=MAX_SCAN_INTERVAL,
                         step=1,
                         mode=NumberSelectorMode.BOX,
