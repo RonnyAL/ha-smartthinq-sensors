@@ -46,6 +46,7 @@ CONF_SCAN_INTERVAL = "scan_interval"
 DEFAULT_SCAN_INTERVAL = 300
 MIN_SCAN_INTERVAL = 30
 MAX_SCAN_INTERVAL = 3600
+DISABLE_SCAN_INTERVAL = 0 # Special value: Disables automatic polling
 
 CLIENT = "client"
 LGE_DEVICES = "lge_devices"
